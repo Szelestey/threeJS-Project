@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<title>Exported from Notepad++</title>
+<style type="text/css">
+span {
+	font-family: 'Courier New';
+	font-size: 10pt;
+	color: #000000;
+}
+.sc0 {
+	font-weight: bold;
+}
+.sc1 {
+	color: #0000FF;
+}
+.sc3 {
+	color: #FF0000;
+}
+.sc6 {
+	font-weight: bold;
+	color: #8000FF;
+}
+.sc8 {
+}
+.sc21 {
+	background: #A6CAF0;
+}
+.sc26 {
+}
+.sc40 {
+}
+.sc41 {
+	background: #F2F4FF;
+}
+.sc43 {
+	color: #008000;
+	background: #F2F4FF;
+}
+.sc45 {
+	color: #FF0000;
+	background: #F2F4FF;
+}
+.sc46 {
+	background: #F2F4FF;
+}
+.sc47 {
+	font-weight: bold;
+	font-style: italic;
+	color: #000080;
+	background: #F2F4FF;
+}
+.sc48 {
+	color: #808080;
+	background: #F2F4FF;
+}
+.sc50 {
+	font-weight: bold;
+	background: #F2F4FF;
+}
+</style>
+</head>
+<body>
+<div style="float: left; white-space: pre; line-height: 1; background: #FFFFFF; "><span class="sc21">&lt;!</span><span class="sc26">DOCTYPE html</span><span class="sc21">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;head&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;meta</span><span class="sc8"> </span><span class="sc3">charset</span><span class="sc8">=</span><span class="sc6">"UTF-8"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;title&gt;</span><span class="sc0">Three.js Deadlift Modeling</span><span class="sc1">&lt;/title&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;style&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/style&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">src</span><span class="sc8">=</span><span class="sc6">"mythree.js"</span><span class="sc1">&gt;&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">src</span><span class="sc8">=</span><span class="sc6">"OrbitControls.js"</span><span class="sc1">&gt;&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script</span><span class="sc8"> </span><span class="sc3">src</span><span class="sc8">=</span><span class="sc6">"Tween.js"</span><span class="sc1">&gt;&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;script&gt;</span><span class="sc40">
+
+
+</span><span class="sc48">"use strict"</span><span class="sc50">;</span><span class="sc41">
+
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">scene</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">camera</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">renderer</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">mixer</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc43">// Three.js rendering basics.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">canvas</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc43">// The canvas on which the image is rendered.</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">clock</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">model</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">ground</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">barbell</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">weightplates</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">weightplatesLeft</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">weightplatesRight</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">controls</span><span class="sc50">;</span><span class="sc41">
+
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">createWorld</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">renderer.setClearColor</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc45">0x444444</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">  </span><span class="sc43">// Set background color (0x444444 is dark gray).</span><span class="sc41">
+    </span><span class="sc46">scene</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Scene</span><span class="sc50">();</span><span class="sc41">
+    
+    </span><span class="sc43">// create a camera, sitting on the positive z-axis.  The camera is not part of the scene.</span><span class="sc41">
+    </span><span class="sc46">camera</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.PerspectiveCamera</span><span class="sc50">(</span><span class="sc45">45</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">canvas.width</span><span class="sc50">/</span><span class="sc46">canvas.height</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">30</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">camera.position.z</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc45">15</span><span class="sc50">;</span><span class="sc41">
+    
+    </span><span class="sc43">// create some lights and add them to the scene.</span><span class="sc41">
+    </span><span class="sc46">scene.add</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.DirectionalLight</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc45">0xE37EB8</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0.8</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41"> </span><span class="sc43">// dim light shining from above</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">viewpointLight</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.DirectionalLight</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc45">0xffffff</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">0.9</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">  </span><span class="sc43">// a light to shine in the direction the camera faces</span><span class="sc41">
+    </span><span class="sc46">viewpointLight.position.set</span><span class="sc50">(</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">scene.add</span><span class="sc50">(</span><span class="sc46">viewpointLight</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc43">// ---------------Create platform -----------------------------</span><span class="sc41">
+    </span><span class="sc46">ground</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Object3D</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">platform</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Mesh</span><span class="sc50">(</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.BoxGeometry</span><span class="sc50">(</span><span class="sc45">8</span><span class="sc50">,</span><span class="sc45">15</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.MeshLambertMaterial</span><span class="sc50">({</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc45">0xC97C00</span><span class="sc50">})</span><span class="sc41">
+    </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">platform.position.set</span><span class="sc50">(-</span><span class="sc45">1.6</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">platform.rotation.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">ground.add</span><span class="sc50">(</span><span class="sc46">platform</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc43">// -------------create the Barbell -----------------------</span><span class="sc41">
+    </span><span class="sc46">barbell</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Object3D</span><span class="sc50">();</span><span class="sc41">
+    
+    </span><span class="sc43">// ------------ Center of barbell ---------------------</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">barcenter</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Mesh</span><span class="sc50">(</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.CylinderGeometry</span><span class="sc50">(</span><span class="sc45">0.25</span><span class="sc50">,</span><span class="sc45">0.25</span><span class="sc50">,</span><span class="sc45">10</span><span class="sc50">,</span><span class="sc45">100</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.MeshLambertMaterial</span><span class="sc50">({</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc45">0xD8D8D8</span><span class="sc50">})</span><span class="sc41">
+    </span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc43">// ---------- Create Barbells Collars ----------------</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">barcollar</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Mesh</span><span class="sc50">(</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.CylinderGeometry</span><span class="sc50">(</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">0.4</span><span class="sc50">,</span><span class="sc45">100</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.MeshLambertMaterial</span><span class="sc50">({</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc45">0xD8D8D8</span><span class="sc50">})</span><span class="sc41">
+    </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">barcollar2</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">barcollar.clone</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">barcollar.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">3</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">barcollar2.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,-</span><span class="sc45">3</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    
+    </span><span class="sc46">barbell.add</span><span class="sc50">(</span><span class="sc46">barcenter</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">barbell.add</span><span class="sc50">(</span><span class="sc46">barcollar</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">barbell.add</span><span class="sc50">(</span><span class="sc46">barcollar2</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc43">// --------------create the weightplates --------------------</span><span class="sc41">
+    </span><span class="sc46">weightplates</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Object3D</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">weightplatesLeft</span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Object3D</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">weightplatesRight</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Object3D</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateRed</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Mesh</span><span class="sc50">(</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.CylinderGeometry</span><span class="sc50">(</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0.5</span><span class="sc50">,</span><span class="sc45">100</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.MeshLambertMaterial</span><span class="sc50">({</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc45">0xFF0000</span><span class="sc50">})</span><span class="sc41">
+    </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateBlue</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Mesh</span><span class="sc50">(</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.CylinderGeometry</span><span class="sc50">(</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0.35</span><span class="sc50">,</span><span class="sc45">100</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.MeshLambertMaterial</span><span class="sc50">({</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc45">0x0000FF</span><span class="sc50">})</span><span class="sc41">
+    </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateYellow</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Mesh</span><span class="sc50">(</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.CylinderGeometry</span><span class="sc50">(</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0.2</span><span class="sc50">,</span><span class="sc45">100</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.MeshLambertMaterial</span><span class="sc50">({</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc45">0xFFFF00</span><span class="sc50">})</span><span class="sc41">
+    </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateGreen</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Mesh</span><span class="sc50">(</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.CylinderGeometry</span><span class="sc50">(</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">1.5</span><span class="sc50">,</span><span class="sc45">0.1</span><span class="sc50">,</span><span class="sc45">100</span><span class="sc50">),</span><span class="sc41">
+    </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.MeshLambertMaterial</span><span class="sc50">({</span><span class="sc41"> </span><span class="sc46">color</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc45">0x008000</span><span class="sc50">})</span><span class="sc41">
+    </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateRed2</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">weightplateRed.clone</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateBlue2</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">weightplateBlue.clone</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateYellow2</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">weightplateYellow.clone</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">weightplateGreen2</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">weightplateGreen.clone</span><span class="sc50">();</span><span class="sc41">
+    
+    </span><span class="sc46">weightplateRed.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">3.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">weightplateBlue.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">4</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">weightplateYellow.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">4.35</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">weightplateGreen.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">4.55</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    
+    </span><span class="sc46">weightplateRed2.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,-</span><span class="sc45">3.5</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">weightplateBlue2.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,-</span><span class="sc45">4</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">weightplateYellow2.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,-</span><span class="sc45">4.35</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc46">weightplateGreen2.position.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,-</span><span class="sc45">4.55</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">)</span><span class="sc41">
+    
+    </span><span class="sc46">weightplatesLeft.add</span><span class="sc50">(</span><span class="sc46">weightplateRed</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplatesLeft.add</span><span class="sc50">(</span><span class="sc46">weightplateBlue</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplatesLeft.add</span><span class="sc50">(</span><span class="sc46">weightplateYellow</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplatesLeft.add</span><span class="sc50">(</span><span class="sc46">weightplateGreen</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplatesRight.add</span><span class="sc50">(</span><span class="sc46">weightplateRed2</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplatesRight.add</span><span class="sc50">(</span><span class="sc46">weightplateBlue2</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplatesRight.add</span><span class="sc50">(</span><span class="sc46">weightplateYellow2</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplatesRight.add</span><span class="sc50">(</span><span class="sc46">weightplateGreen2</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc46">weightplates.add</span><span class="sc50">(</span><span class="sc46">weightplatesLeft</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">weightplates.add</span><span class="sc50">(</span><span class="sc46">weightplatesRight</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc43">// --------------create the model -------------------------</span><span class="sc41">
+    </span><span class="sc46">model</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.Object3D</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">model.add</span><span class="sc50">(</span><span class="sc46">ground</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">model.</span><span class="sc41"> </span><span class="sc46">add</span><span class="sc50">(</span><span class="sc46">barbell</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">model.add</span><span class="sc50">(</span><span class="sc46">weightplates</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">model.rotation.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1.57</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">scene.add</span><span class="sc50">(</span><span class="sc46">model</span><span class="sc50">);</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">render</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">renderer.render</span><span class="sc50">(</span><span class="sc46">scene</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">camera</span><span class="sc50">);</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">animate</span><span class="sc50">(</span><span class="sc46">time</span><span class="sc50">){</span><span class="sc41">
+    </span><span class="sc46">requestAnimationFrame</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">animate</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">TWEEN.update</span><span class="sc50">(</span><span class="sc46">time</span><span class="sc50">);</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">//----------------------------- keyboard support ----------------------------------</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">doKey</span><span class="sc50">(</span><span class="sc46">event</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">code</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">event.keyCode</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">rotated</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">true</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc47">switch</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc46">code</span><span class="sc41"> </span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">case</span><span class="sc41"> </span><span class="sc45">37</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">model.rotation.y</span><span class="sc41"> </span><span class="sc50">-=</span><span class="sc41"> </span><span class="sc45">0.03</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc47">break</span><span class="sc50">;</span><span class="sc41">    </span><span class="sc43">// left arrow</span><span class="sc41">
+    </span><span class="sc47">case</span><span class="sc41"> </span><span class="sc45">39</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">model.rotation.y</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41">  </span><span class="sc45">0.03</span><span class="sc50">;</span><span class="sc41"> </span><span class="sc47">break</span><span class="sc50">;</span><span class="sc41">    </span><span class="sc43">// right arrow</span><span class="sc41">
+    </span><span class="sc47">case</span><span class="sc41"> </span><span class="sc45">38</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">model.rotation.x</span><span class="sc41"> </span><span class="sc50">-=</span><span class="sc41"> </span><span class="sc45">0.03</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc47">break</span><span class="sc50">;</span><span class="sc41">    </span><span class="sc43">// up arrow</span><span class="sc41">
+    </span><span class="sc47">case</span><span class="sc41"> </span><span class="sc45">40</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">model.rotation.x</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41"> </span><span class="sc45">0.03</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc47">break</span><span class="sc50">;</span><span class="sc41">    </span><span class="sc43">// down arrow</span><span class="sc41">
+    </span><span class="sc47">case</span><span class="sc41"> </span><span class="sc45">33</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">model.rotation.z</span><span class="sc41"> </span><span class="sc50">-=</span><span class="sc41"> </span><span class="sc45">0.03</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc47">break</span><span class="sc50">;</span><span class="sc41">    </span><span class="sc43">// page up</span><span class="sc41">
+    </span><span class="sc47">case</span><span class="sc41"> </span><span class="sc45">34</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">model.rotation.z</span><span class="sc41"> </span><span class="sc50">+=</span><span class="sc41"> </span><span class="sc45">0.03</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc47">break</span><span class="sc50">;</span><span class="sc41">    </span><span class="sc43">// page down</span><span class="sc41">
+    </span><span class="sc47">case</span><span class="sc41"> </span><span class="sc45">36</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">model.rotation.set</span><span class="sc50">(</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">0</span><span class="sc50">,</span><span class="sc45">1.57</span><span class="sc50">);</span><span class="sc41"> </span><span class="sc47">break</span><span class="sc50">;</span><span class="sc41">  </span><span class="sc43">// home</span><span class="sc41">
+    </span><span class="sc47">default</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">rotated</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">rotated</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">event.preventDefault</span><span class="sc50">();</span><span class="sc41">  </span><span class="sc43">// Prevent keys from scrolling the page.</span><span class="sc41">
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(!</span><span class="sc46">animating</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41"> </span><span class="sc43">// (if an animation is running, no need for an extra render)</span><span class="sc41">
+            </span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">//----------------- Handles Mouse Rotating Model ------------------------------------------</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">installOrbitControls</span><span class="sc50">(</span><span class="sc46">camera</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">canvas</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">callback</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc46">controls</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.OrbitControls</span><span class="sc50">(</span><span class="sc46">camera</span><span class="sc50">,</span><span class="sc46">canvas</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">controls.noPan</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">true</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">controls.noZoom</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">true</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">controls.staticMoving</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">true</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">move</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">controls.update</span><span class="sc50">();</span><span class="sc41">
+        </span><span class="sc46">callback</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">down</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">document.addEventListener</span><span class="sc50">(</span><span class="sc48">"mousemove"</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">move</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">up</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">document.removeEventListener</span><span class="sc50">(</span><span class="sc48">"mousemove"</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">move</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">touch</span><span class="sc50">(</span><span class="sc46">event</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc47">if</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">event.touches.length</span><span class="sc41"> </span><span class="sc50">==</span><span class="sc41"> </span><span class="sc45">1</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+            </span><span class="sc46">move</span><span class="sc50">();</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc46">canvas.addEventListener</span><span class="sc50">(</span><span class="sc48">"mousedown"</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">down</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">canvas.addEventListener</span><span class="sc50">(</span><span class="sc48">"touchmove"</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">touch</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">);</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc43">// -------------- Handles RadioButtons ----------------------</span><span class="sc41">
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">doChangeModel</span><span class="sc50">(){</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">unload</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"unload"</span><span class="sc50">).</span><span class="sc46">checked</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">load</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"load"</span><span class="sc50">).</span><span class="sc46">checked</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">animate</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">position</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41"> </span><span class="sc46">y</span><span class="sc50">:</span><span class="sc45">0</span><span class="sc41"> </span><span class="sc50">};</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">target</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41"> </span><span class="sc46">y</span><span class="sc50">:</span><span class="sc45">2.5</span><span class="sc41"> </span><span class="sc50">};</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">target1</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41"> </span><span class="sc46">y</span><span class="sc50">:-</span><span class="sc45">2.5</span><span class="sc41"> </span><span class="sc50">};</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">tween</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">TWEEN.Tween</span><span class="sc50">(</span><span class="sc46">position</span><span class="sc50">).</span><span class="sc46">to</span><span class="sc50">(</span><span class="sc46">target</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">3000</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc50">.</span><span class="sc46">easing</span><span class="sc50">(</span><span class="sc46">TWEEN.Easing.Quadratic.In</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">tween1</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">TWEEN.Tween</span><span class="sc50">(</span><span class="sc46">position</span><span class="sc50">).</span><span class="sc46">to</span><span class="sc50">(</span><span class="sc46">target1</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">3000</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc50">.</span><span class="sc46">easing</span><span class="sc50">(</span><span class="sc46">TWEEN.Easing.Quadratic.In</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">tween2</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">TWEEN.Tween</span><span class="sc50">(</span><span class="sc46">target</span><span class="sc50">).</span><span class="sc46">to</span><span class="sc50">(</span><span class="sc46">position</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">3000</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc50">.</span><span class="sc46">easing</span><span class="sc50">(</span><span class="sc46">TWEEN.Easing.Quadratic.Out</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc47">var</span><span class="sc41"> </span><span class="sc46">tween3</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">TWEEN.Tween</span><span class="sc50">(</span><span class="sc46">target1</span><span class="sc50">).</span><span class="sc46">to</span><span class="sc50">(</span><span class="sc46">position</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc45">3000</span><span class="sc50">)</span><span class="sc41">
+    </span><span class="sc50">.</span><span class="sc46">easing</span><span class="sc50">(</span><span class="sc46">TWEEN.Easing.Quadratic.Out</span><span class="sc50">);</span><span class="sc41">
+    
+    </span><span class="sc47">if</span><span class="sc50">(</span><span class="sc46">unload</span><span class="sc50">){</span><span class="sc41">
+        </span><span class="sc46">tween.onUpdate</span><span class="sc50">(</span><span class="sc47">function</span><span class="sc50">(){</span><span class="sc41">
+            </span><span class="sc46">weightplatesLeft.position.y</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">position.y</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc50">});</span><span class="sc41">
+        </span><span class="sc46">tween.start</span><span class="sc50">();</span><span class="sc41">
+        </span><span class="sc46">tween1.onUpdate</span><span class="sc50">(</span><span class="sc47">function</span><span class="sc50">(){</span><span class="sc41">
+            </span><span class="sc46">weightplatesRight.position.y</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">position.y</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc50">});</span><span class="sc41">
+        </span><span class="sc46">tween1.start</span><span class="sc50">()</span><span class="sc41">      
+    </span><span class="sc50">}</span><span class="sc41">   
+    </span><span class="sc47">else</span><span class="sc41"> </span><span class="sc47">if</span><span class="sc50">(</span><span class="sc46">load</span><span class="sc50">){</span><span class="sc41">
+        </span><span class="sc46">tween2.onUpdate</span><span class="sc50">(</span><span class="sc47">function</span><span class="sc50">(){</span><span class="sc41">
+            </span><span class="sc46">weightplatesLeft.position.y</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">position.y</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc50">});</span><span class="sc41">
+        </span><span class="sc46">tween2.start</span><span class="sc50">();</span><span class="sc41">
+        </span><span class="sc46">tween3.onUpdate</span><span class="sc50">(</span><span class="sc47">function</span><span class="sc50">(){</span><span class="sc41">
+            </span><span class="sc46">weightplatesRight.position.y</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">position.y</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc50">});</span><span class="sc41">
+        </span><span class="sc46">tween3.start</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc47">function</span><span class="sc41"> </span><span class="sc46">init</span><span class="sc50">()</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+    </span><span class="sc47">try</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">canvas</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"glcanvas"</span><span class="sc50">);</span><span class="sc41">
+        </span><span class="sc46">renderer</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">new</span><span class="sc41"> </span><span class="sc46">THREE.WebGLRenderer</span><span class="sc50">(</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+</span><span class="sc46">canvas</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc46">canvas</span><span class="sc50">,</span><span class="sc41">
+</span><span class="sc46">antialias</span><span class="sc50">:</span><span class="sc41"> </span><span class="sc47">true</span><span class="sc41">
+        </span><span class="sc50">}</span><span class="sc41"> </span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    </span><span class="sc47">catch</span><span class="sc41"> </span><span class="sc50">(</span><span class="sc46">e</span><span class="sc50">)</span><span class="sc41"> </span><span class="sc50">{</span><span class="sc41">
+        </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"canvas-holder"</span><span class="sc50">).</span><span class="sc46">innerHTML</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41">
+        </span><span class="sc48">"&lt;h3&gt;&lt;b&gt;Sorry, WebGL is required but is not available.&lt;/b&gt;&lt;h3&gt;"</span><span class="sc50">;</span><span class="sc41">
+        </span><span class="sc47">return</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc50">}</span><span class="sc41">
+    
+    </span><span class="sc46">createWorld</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">render</span><span class="sc50">();</span><span class="sc41">
+    </span><span class="sc46">installOrbitControls</span><span class="sc50">(</span><span class="sc46">camera</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">canvas</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">render</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">document.addEventListener</span><span class="sc50">(</span><span class="sc48">"keydown"</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc46">doKey</span><span class="sc50">,</span><span class="sc41"> </span><span class="sc47">false</span><span class="sc50">);</span><span class="sc41">
+    </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"load"</span><span class="sc50">).</span><span class="sc46">checked</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc47">true</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"unload"</span><span class="sc50">).</span><span class="sc46">onchange</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">doChangeModel</span><span class="sc50">;</span><span class="sc41">
+    </span><span class="sc46">document.getElementById</span><span class="sc50">(</span><span class="sc48">"load"</span><span class="sc50">).</span><span class="sc46">onchange</span><span class="sc41"> </span><span class="sc50">=</span><span class="sc41"> </span><span class="sc46">doChangeModel</span><span class="sc50">;</span><span class="sc41">
+</span><span class="sc50">}</span><span class="sc41">
+
+</span><span class="sc1">&lt;/script&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/head&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;body</span><span class="sc8"> </span><span class="sc3">onload</span><span class="sc8">=</span><span class="sc6">"init()"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;body&gt;</span><span class="sc0">
+
+</span><span class="sc1">&lt;h2&gt;</span><span class="sc0">Three.js Deadlift Model</span><span class="sc1">&lt;/h2&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0">Created By: Alexander Szelestey</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0">Date: February 22, 2020</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0">Class: CMSC 405</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0">Project 3 Three js Project</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;&lt;b&gt;</span><span class="sc0">Operation</span><span class="sc1">&lt;/p&gt;&lt;/b&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0">Rotate Model by using the mouse to click and move or the</span><span class="sc1">&lt;/b&gt;&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0">following keys: Arrows, PageUp, PageDown, and Home.</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;</span><span class="sc0">Click image if bar doesnt unload when selected.</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;div</span><span class="sc8"> </span><span class="sc3">style</span><span class="sc8">=</span><span class="sc6">"float:left; margin-left:30px"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;&lt;b&gt;</span><span class="sc0">Load/Unload Barbell:</span><span class="sc1">&lt;/b&gt;&lt;br&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;&lt;label</span><span class="sc8"> </span><span class="sc1">&gt;&lt;input</span><span class="sc8"> </span><span class="sc3">type</span><span class="sc8">=</span><span class="sc6">"radio"</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"load"</span><span class="sc8"> </span><span class="sc3">name</span><span class="sc8">=</span><span class="sc6">"model"</span><span class="sc1">&gt;</span><span class="sc0">Load</span><span class="sc1">&lt;/label&gt;&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;p&gt;&lt;label</span><span class="sc8"> </span><span class="sc1">&gt;&lt;input</span><span class="sc8"> </span><span class="sc3">type</span><span class="sc8">=</span><span class="sc6">"radio"</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"unload"</span><span class="sc8"> </span><span class="sc3">name</span><span class="sc8">=</span><span class="sc6">"model"</span><span class="sc1">&gt;</span><span class="sc0">Unload</span><span class="sc1">&lt;/label&gt;&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;div</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"canvas-holder"</span><span class="sc1">&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;canvas</span><span class="sc8"> </span><span class="sc3">id</span><span class="sc8">=</span><span class="sc6">"glcanvas"</span><span class="sc8"> </span><span class="sc3">width</span><span class="sc8">=</span><span class="sc6">"1000px"</span><span class="sc8"> </span><span class="sc3">height</span><span class="sc8">=</span><span class="sc6">"500px"</span><span class="sc1">&gt;&lt;/canvas&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/div&gt;</span><span class="sc0">
+
+
+</span><span class="sc1">&lt;/p&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/div&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/body&gt;</span><span class="sc0">
+</span><span class="sc1">&lt;/html&gt;</span><span class="sc0">
+</span></div></body>
+</html>

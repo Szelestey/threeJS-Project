@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>Three.js Deadlift Modeling</title>
+<style>
+</style>
+<script src="mythree.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="Tween.js"></script>
+<script>
+
+
+"use strict";
+
+var scene, camera, renderer, mixer;  // Three.js rendering basics.
+var canvas;  // The canvas on which the image is rendered.
+var clock;
+var model, ground, barbell, weightplates, weightplatesLeft, weightplatesRight;
+var controls;
+
+function createWorld() {
+	renderer.setClearColor( 0x444444 );  // Set background color (0x444444 is dark gray).
+	scene = new THREE.Scene();
+	
+	// create a camera, sitting on the positive z-axis.  The camera is not part of the scene.
+	camera = new THREE.PerspectiveCamera(45, canvas.width/canvas.height, 1, 30);
+	camera.position.z = 15;
+	
+	// create some lights and add them to the scene.
+	scene.add( new THREE.DirectionalLight( 0xE37EB8, 0.8 ) ); // dim light shining from above
+	var viewpointLight = new THREE.DirectionalLight( 0xffffff, 0.9 );  // a light to shine in the direction the camera faces
+	viewpointLight.position.set(0.5,0,0.5);
+	scene.add(viewpointLight);
+	
+	// ---------------Create platform -----------------------------
+	ground = new THREE.Object3D();
+	var platform = new THREE.Mesh(
+	new THREE.BoxGeometry(8,15,0.2),
+	new THREE.MeshLambertMaterial({ color: 0xC97C00})
+	);
+	platform.position.set(-1.6,0,0)
+	platform.rotation.set(0,1.5,0)
+	ground.add(platform);
+	
+	// -------------create the Barbell -----------------------
+	barbell = new THREE.Object3D();
+	
+	// ------------ Center of barbell ---------------------
+	var barcenter = new THREE.Mesh(
+	new THREE.CylinderGeometry(0.25,0.25,10,100),
+	new THREE.MeshLambertMaterial({ color: 0xD8D8D8})
+	);
+	
+	// ---------- Create Barbells Collars ----------------
+	var barcollar = new THREE.Mesh(
+	new THREE.CylinderGeometry(0.4,0.4,0.4,100),
+	new THREE.MeshLambertMaterial({ color: 0xD8D8D8})
+	);
+	var barcollar2 = barcollar.clone();
+	barcollar.position.set(0,3,0)
+	barcollar2.position.set(0,-3,0)
+	
+	barbell.add(barcenter);
+	barbell.add(barcollar);
+	barbell.add(barcollar2);
+	
+	// --------------create the weightplates --------------------
+	weightplates = new THREE.Object3D();
+	weightplatesLeft= new THREE.Object3D();
+	weightplatesRight = new THREE.Object3D();
+	var weightplateRed = new THREE.Mesh(
+	new THREE.CylinderGeometry(1.5,1.5,0.5,100),
+	new THREE.MeshLambertMaterial({ color: 0xFF0000})
+	);
+	var weightplateBlue = new THREE.Mesh(
+	new THREE.CylinderGeometry(1.5,1.5,0.35,100),
+	new THREE.MeshLambertMaterial({ color: 0x0000FF})
+	);
+	var weightplateYellow = new THREE.Mesh(
+	new THREE.CylinderGeometry(1.5,1.5,0.2,100),
+	new THREE.MeshLambertMaterial({ color: 0xFFFF00})
+	);
+	var weightplateGreen = new THREE.Mesh(
+	new THREE.CylinderGeometry(1.5,1.5,0.1,100),
+	new THREE.MeshLambertMaterial({ color: 0x008000})
+	);
+	var weightplateRed2 = weightplateRed.clone();
+	var weightplateBlue2 = weightplateBlue.clone();
+	var weightplateYellow2 = weightplateYellow.clone();
+	var weightplateGreen2 = weightplateGreen.clone();
+	
+	weightplateRed.position.set(0,3.5,0)
+	weightplateBlue.position.set(0,4,0)
+	weightplateYellow.position.set(0,4.35,0)
+	weightplateGreen.position.set(0,4.55,0)
+	
+	weightplateRed2.position.set(0,-3.5,0)
+	weightplateBlue2.position.set(0,-4,0)
+	weightplateYellow2.position.set(0,-4.35,0)
+	weightplateGreen2.position.set(0,-4.55,0)
+	
+	weightplatesLeft.add(weightplateRed);
+	weightplatesLeft.add(weightplateBlue);
+	weightplatesLeft.add(weightplateYellow);
+	weightplatesLeft.add(weightplateGreen);
+	weightplatesRight.add(weightplateRed2);
+	weightplatesRight.add(weightplateBlue2);
+	weightplatesRight.add(weightplateYellow2);
+	weightplatesRight.add(weightplateGreen2);
+	
+	weightplates.add(weightplatesLeft);
+	weightplates.add(weightplatesRight);
+	
+	// --------------create the model -------------------------
+	model = new THREE.Object3D();
+	model.add(ground);
+	model. add(barbell);
+	model.add(weightplates);
+	model.rotation.set(0,0,1.57);
+	scene.add(model);
+}
+
+function render() {
+	renderer.render(scene, camera);
+}
+
+function animate(time){
+	requestAnimationFrame( animate );
+	TWEEN.update(time);
+}
+
+//----------------------------- keyboard support ----------------------------------
+function doKey(event) {
+	var code = event.keyCode;
+	var rotated = true;
+	switch( code ) {
+	case 37: model.rotation.y -= 0.03;  break;    // left arrow
+	case 39: model.rotation.y +=  0.03; break;    // right arrow
+	case 38: model.rotation.x -= 0.03;  break;    // up arrow
+	case 40: model.rotation.x += 0.03;  break;    // down arrow
+	case 33: model.rotation.z -= 0.03;  break;    // page up
+	case 34: model.rotation.z += 0.03;  break;    // page down
+	case 36: model.rotation.set(0,0,1.57); break;  // home
+	default: rotated = false;
+	}
+	if (rotated) {
+		event.preventDefault();  // Prevent keys from scrolling the page.
+		if (!animating) { // (if an animation is running, no need for an extra render)
+			render();
+		}
+	}
+}
+
+//----------------- Handles Mouse Rotating Model ------------------------------------------
+function installOrbitControls(camera, canvas, callback) {
+	controls = new THREE.OrbitControls(camera,canvas);
+	controls.noPan = true;
+	controls.noZoom = true;
+	controls.staticMoving = true;
+	function move() {
+		controls.update();
+		callback();
+	}
+	function down() {
+		document.addEventListener("mousemove", move, false);
+	}
+	function up() {
+		document.removeEventListener("mousemove", move, false);
+	}
+	function touch(event) {
+		if (event.touches.length == 1) {
+			move();
+		}
+	}
+	canvas.addEventListener("mousedown", down, false);
+	canvas.addEventListener("touchmove", touch, false);
+}
+
+// -------------- Handles RadioButtons ----------------------
+function doChangeModel(){
+	var unload = document.getElementById("unload").checked;
+	var load = document.getElementById("load").checked;
+	animate();
+	var position = { y:0 };
+	var target = { y:2.5 };
+	var target1 = { y:-2.5 };
+	var tween = new TWEEN.Tween(position).to(target, 3000)
+	.easing(TWEEN.Easing.Quadratic.In);
+	var tween1 = new TWEEN.Tween(position).to(target1, 3000)
+	.easing(TWEEN.Easing.Quadratic.In);
+	var tween2 = new TWEEN.Tween(target).to(position, 3000)
+	.easing(TWEEN.Easing.Quadratic.Out);
+	var tween3 = new TWEEN.Tween(target1).to(position, 3000)
+	.easing(TWEEN.Easing.Quadratic.Out);
+	
+	if(unload){
+		tween.onUpdate(function(){
+			weightplatesLeft.position.y = position.y;
+		});
+		tween.start();
+		tween1.onUpdate(function(){
+			weightplatesRight.position.y = position.y;
+		});
+		tween1.start()		
+	}	
+	else if(load){
+		tween2.onUpdate(function(){
+			weightplatesLeft.position.y = position.y;
+		});
+		tween2.start();
+		tween3.onUpdate(function(){
+			weightplatesRight.position.y = position.y;
+		});
+		tween3.start();
+	}
+}
+
+function init() {
+	try {
+		canvas = document.getElementById("glcanvas");
+		renderer = new THREE.WebGLRenderer( {
+canvas: canvas,
+antialias: true
+		} );
+	}
+	catch (e) {
+		document.getElementById("canvas-holder").innerHTML =
+		"<h3><b>Sorry, WebGL is required but is not available.</b><h3>";
+		return;
+	}
+	
+	createWorld();
+	render();
+	installOrbitControls(camera, canvas, render);
+	document.addEventListener("keydown", doKey, false);
+	document.getElementById("load").checked = true;
+	document.getElementById("unload").onchange = doChangeModel;
+	document.getElementById("load").onchange = doChangeModel;
+}
+
+</script>
+</head>
+<body onload="init()">
+<body>
+
+<h2>Three.js Deadlift Model</h2>
+<p>Created By: Alexander Szelestey</p>
+<p>Date: February 22, 2020</p>
+<p>Class: CMSC 405</p>
+<p>Project 3 Three js Project</p>
+<p><b>Operation</p></b>
+<p>Rotate Model by using the mouse to click and move or the</b></p>
+<p>following keys: Arrows, PageUp, PageDown, and Home.</p>
+<p>Click image if bar doesnt unload when selected.</p>
+<div style="float:left; margin-left:30px">
+<p><b>Load/Unload Barbell:</b><br>
+<p><label ><input type="radio" id="load" name="model">Load</label></p>
+<p><label ><input type="radio" id="unload" name="model">Unload</label></p>
+<div id="canvas-holder">
+<canvas id="glcanvas" width="1000px" height="500px"></canvas>
+</div>
+
+
+</p>
+</div>
+</body>
+</html>
